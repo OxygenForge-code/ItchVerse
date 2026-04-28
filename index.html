@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Itchverse • Launching</title>
+
+<style>
+/* =========================
+   RESET
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #0a0a0f;
+  font-family: Inter, system-ui, sans-serif;
+  color: #fff;
+  overflow: hidden;
+}
+
+/* =========================
+   VARIABLES
+========================= */
+:root {
+  --primary: #ff3d81;
+  --secondary: #6b7cff;
+  --accent: #2cffc9;
+  --glass: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.08);
+}
+
+/* =========================
+   BACKGROUND EFFECT
+========================= */
+.bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, #ff3d8122, transparent 40%),
+    radial-gradient(circle at 80% 20%, #6b7cff22, transparent 40%),
+    radial-gradient(circle at 50% 80%, #2cffc922, transparent 40%);
+  animation: bgMove 18s ease-in-out infinite;
+}
+
+@keyframes bgMove {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* =========================
+   MAIN CONTAINER
+========================= */
+.center {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+}
+
+/* =========================
+   PANEL
+========================= */
+.panel {
+  width: 420px;
+  padding: 40px;
+  border-radius: 20px;
+  background: var(--glass);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+}
+
+/* =========================
+   LOGO
+========================= */
+.logo {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+
+.tagline {
+  font-size: 13px;
+  opacity: 0.6;
+  margin-bottom: 30px;
+}
+
+/* =========================
+   PROGRESS BAR
+========================= */
+.bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transition: width 0.25s ease;
+}
+
+/* =========================
+   STATUS
+========================= */
+.status {
+  margin-top: 18px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.module {
+  opacity: 0.6;
+}
+
+/* =========================
+   FOOTER
+========================= */
+.footer {
+  position: absolute;
+  bottom: 20px;
+  font-size: 11px;
+  opacity: 0.35;
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<div class="center">
+  <div class="panel">
+    <div class="logo">Itchverse</div>
+    <div class="tagline">Next-gen indie game platform</div>
+
+    <div class="bar">
+      <div class="fill" id="fill"></div>
+    </div>
+
+    <div class="status">
+      <div class="module" id="module">Initializing engine</div>
+      <div id="percent">0%</div>
+    </div>
+  </div>
+
+  <div class="footer">© Itchverse Platform</div>
+</div>
+
+<script>
+/* =========================
+   LOADING LOGIC
+========================= */
+const fill = document.getElementById("fill");
+const percent = document.getElementById("percent");
+const moduleText = document.getElementById("module");
+
+const modules = [
+  "Initializing engine",
+  "Loading UI framework",
+  "Syncing user profile",
+  "Fetching games",
+  "Preparing sandbox",
+  "Finalizing launch"
+];
+
+let progress = 0;
+let moduleIndex = 0;
+
+const timer = setInterval(() => {
+  progress += Math.random() * 6 + 2;
+  if (progress >= 100) {
+    progress = 100;
+    clearInterval(timer);
+
+    moduleText.textContent = "Launching Itchverse…";
+
+    setTimeout(() => {
+      window.location.href = "main.html";
+    }, 900);
+  }
+
+  fill.style.width = progress + "%";
+  percent.textContent = Math.floor(progress) + "%";
+
+  if (progress > moduleIndex * (100 / modules.length)) {
+    moduleText.textContent = modules[moduleIndex] || modules.at(-1);
+    moduleIndex++;
+  }
+
+}, 140);
+</script>
+
+</body>
+</html>
