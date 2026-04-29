@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oyun Detayı - ItchVerse</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            background: #0f0f1a; 
+            color: #fff; 
+            min-height: 100vh;
+        }
+        .header { 
+            background: #1a1a2e; 
+            padding: 15px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            border-bottom: 2px solid #e94560;
+        }
+        .logo { font-size: 24px; font-weight: bold; color: #e94560; cursor: pointer; }
+        .logo span { color: #fff; }
+        .back-btn { 
+            background: #16213e; 
+            color: #fff; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            cursor: pointer;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .game-hero { 
+            background: #16213e; 
+            border-radius: 15px; 
+            padding: 30px; 
+            margin: 20px 0;
+            text-align: center;
+        }
+        .game-icon { font-size: 80px; margin-bottom: 15px; }
+        .game-title { font-size: 32px; margin-bottom: 10px; }
+        .game-dev { 
+            color: #e94560; 
+            font-size: 16px; 
+            margin-bottom: 15px;
+        }
+        .game-meta { 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .meta-item { 
+            background: #0f0f1a; 
+            padding: 10px 20px; 
+            border-radius: 10px;
+        }
+        .meta-item span { color: #e94560; font-weight: bold; }
+        .tag { 
+            background: #0f3460; 
+            color: #4fbdba; 
+            padding: 5px 15px; 
+            border-radius: 15px; 
+            font-size: 14px;
+            display: inline-block;
+        }
+        .game-desc { 
+            background: #16213e; 
+            padding: 25px; 
+            border-radius: 15px; 
+            margin: 20px 0;
+            line-height: 1.8; 
+            color: #ccc; 
+            font-size: 16px;
+        }
+        .action-btns { 
+            display: flex; 
+            gap: 15px; 
+            justify-content: center; 
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .btn { 
+            padding: 15px 35px; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary { background: #e94560; color: white; }
+        .btn-primary:hover { background: #ff6b6b; transform: scale(1.05); }
+        .btn-secondary { background: #16213e; color: #fff; border: 2px solid #e94560; }
+        .btn-secondary:hover { background: #e94560; }
+        .reviews-section { 
+            background: #16213e; 
+            padding: 25px; 
+            border-radius: 15px; 
+            margin: 20px 0;
+        }
+        .reviews-section h2 { color: #e94560; margin-bottom: 20px; }
+        .review-form { margin-bottom: 25px; }
+        .review-form textarea { 
+            width: 100%; 
+            padding: 15px; 
+            border: 1px solid #333; 
+            border-radius: 10px; 
+            background: #0f0f1a; 
+            color: #fff; 
+            min-height: 80px;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+        .star-rating { 
+            display: flex; 
+            gap: 5px; 
+            margin-bottom: 10px; 
+            font-size: 24px;
+        }
+        .star { cursor: pointer; color: #444; transition: color 0.2s; }
+        .star.active { color: #ffd700; }
+        .review-item { 
+            background: #0f0f1a; 
+            padding: 15px; 
+            border-radius: 10px; 
+            margin-bottom: 15px;
+        }
+        .review-header { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 8px;
+        }
+        .review-user { color: #e94560; font-weight: bold; }
+        .review-stars { color: #ffd700; }
+        .review-text { color: #aaa; line-height: 1.5; }
+        .empty-reviews { text-align: center; color: #888; padding: 30px; }
+        .loading { text-align: center; padding: 60px; color: #e94560; font-size: 20px; }
+        .not-found { text-align: center; padding: 80px 20px; }
+        .not-found h1 { font-size: 48px; color: #e94560; margin-bottom: 20px; }
+        @media (max-width: 600px) {
+            .game-title { font-size: 24px; }
+            .btn { width: 100%; }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="logo" onclick="goHome()">Itch<span>Verse</span></div>
+        <button class="back-btn" onclick="goHome()">← Ana Sayfa</button>
+    </div>
+
+    <div class="container" id="content">
+        <div class="loading">⏳ Oyun bilgileri yükleniyor...</div>
+    </div>
+
+    <script>
+        // ===== SUPABASE AYARLARI =====
+        const SUPABASE_URL = 'https://SENIN-PROJE-URL.supabase.co';
+        const SUPABASE_ANON_KEY = 'SENIN-ANON-KEY-BURAYA';
+
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let currentGame = null;
+        let userRating = 0;
+
+        // ===== URL'DEN ID AL =====
+        function getGameId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        // ===== OYUNU YÜKLE =====
+        async function loadGame() {
+            const id = getGameId();
+            const container = document.getElementById('content');
+
+            if (!id) {
+                container.innerHTML = `
+                    <div class="not-found">
+                        <h1>😕</h1>
+                        <h2>Oyun bulunamadı</h2>
+                        <p>Geçersiz oyun ID'si.</p>
+                    </div>`;
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from('games')
+                .select('*')
+                .eq('id', id)
+                .single();
+
+            if (error || !data) {
+                container.innerHTML = `
+                    <div class="not-found">
+                        <h1>😕</h1>
+                        <h2>Oyun bulunamadı</h2>
+                        <p>Bu oyun silinmiş veya hiç var olmamış olabilir.</p>
+                    </div>`;
+                return;
+            }
+
+            currentGame = data;
+            renderGame();
+            loadReviews();
+        }
+
+        // ===== OYUNU GÖSTER =====
+        function renderGame() {
+            const container = document.getElementById('content');
+            container.innerHTML = `
+                <div class="game-hero">
+                    <div class="game-icon">🎮</div>
+                    <h1 class="game-title">${escapeHtml(currentGame.name)}</h1>
+                    <div class="game-dev">👤 Geliştirici: ${escapeHtml(currentGame.developer)}</div>
+                    <div class="game-meta">
+                        <div class="meta-item">⭐ <span>${currentGame.rating || 0}</span> Puan</div>
+                        <div class="meta-item">📥 <span>${currentGame.downloads || 0}</span> İndirme</div>
+                        <div class="meta-item"><span class="tag">${currentGame.genre.toUpperCase()}</span></div>
+                    </div>
+                    <div class="action-btns">
+                        ${currentGame.link ? 
+                            `<button class="btn btn-primary" onclick="playGame()">🚀 Oyna / İndir</button>` : 
+                            `<button class="btn btn-primary" disabled>🔗 Link Yok</button>`
+                        }
+                        <button class="btn btn-secondary" onclick="scrollToReviews()">💬 Yorumlar</button>
+                    </div>
+                </div>
+
+                <div class="game-desc">
+                    <h3 style="color:#e94560;margin-bottom:15px;">📖 Oyun Açıklaması</h3>
+                    ${escapeHtml(currentGame.description)}
+                </div>
+
+                <div class="reviews-section" id="reviewsSection">
+                    <h2>💬 Yorumlar & Puanlar</h2>
+                    
+                    <div class="review-form">
+                        <label style="color:#aaa;display:block;margin-bottom:8px;">Puanın:</label>
+                        <div class="star-rating" id="starRating">
+                            <span class="star" onclick="setRating(1)">★</span>
+                            <span class="star" onclick="setRating(2)">★</span>
+                            <span class="star" onclick="setRating(3)">★</span>
+                            <span class="star" onclick="setRating(4)">★</span>
+                            <span class="star" onclick="setRating(5)">★</span>
+                        </div>
+                        <textarea id="reviewText" placeholder="Oyun hakkında düşüncelerini yaz..."></textarea>
+                        <button class="btn btn-primary" onclick="submitReview()" style="width:100%;">💬 Yorum Gönder</button>
+                    </div>
+
+                    <div id="reviewsList">
+                        <div class="loading">⏳ Yorumlar yükleniyor...</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ===== YORUMLARI YÜKLE =====
+        async function loadReviews() {
+            const id = getGameId();
+            const list = document.getElementById('reviewsList');
+
+            const { data, error } = await supabase
+                .from('reviews')
+                .select('*')
+                .eq('game_id', id)
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                list.innerHTML = `<div class="empty-reviews">❌ Yorumlar yüklenemedi</div>`;
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                list.innerHTML = `<div class="empty-reviews">🤔 Henüz yorum yok.<br>İlk yorumu sen yap!</div>`;
+                return;
+            }
+
+            list.innerHTML = data.map(r => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-user">👤 Misafir Kullanıcı</span>
+                        <span class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span>
+                    </div>
+                    <div class="review-text">${escapeHtml(r.text || 'Puan verildi.')}</div>
+                    <div style="color:#666;font-size:12px;margin-top:8px;">${new Date(r.created_at).toLocaleDateString('tr-TR')}</div>
+                </div>
+            `).join('');
+        }
+
+        // ===== YORUM GÖNDER =====
+        async function submitReview() {
+            const text = document.getElementById('reviewText').value;
+            if (userRating === 0) {
+                alert('⭐ Lütfen bir puan seç!');
+                return;
+            }
+
+            const id = getGameId();
+            const btn = event.target;
+            btn.innerHTML = '⏳ Gönderiliyor...';
+            btn.disabled = true;
+
+            const { error } = await supabase
+                .from('reviews')
+                .insert([{
+                    game_id: id,
+                    rating: userRating,
+                    text: text
+                }]);
+
+            if (error) {
+                alert('❌ Hata: ' + error.message);
+                btn.innerHTML = '💬 Yorum Gönder';
+                btn.disabled = false;
+                return;
+            }
+
+            // Oyunun ortalama puanını güncelle
+            await updateGameRating(id);
+
+            alert('✅ Yorumun gönderildi!');
+            document.getElementById('reviewText').value = '';
+            setRating(0);
+            btn.innerHTML = '💬 Yorum Gönder';
+            btn.disabled = false;
+            loadReviews();
+            loadGame(); // Puanı yenile
+        }
+
+        // ===== OYUN PUANINI GÜNCELLE =====
+        async function updateGameRating(gameId) {
+            const { data } = await supabase
+                .from('reviews')
+                .select('rating')
+                .eq('game_id', gameId);
+
+            if (data && data.length > 0) {
+                const avg = Math.round(data.reduce((a, b) => a + b.rating, 0) / data.length);
+                await supabase.from('games').update({ rating: avg }).eq('id', gameId);
+            }
+        }
+
+        // ===== YILDIZ SEÇİMİ =====
+        function setRating(n) {
+            userRating = n;
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((s, i) => {
+                s.classList.toggle('active', i < n);
+            });
+        }
+
+        // ===== OYNA BUTONU =====
+        function playGame() {
+            if (currentGame.link) {
+                window.open(currentGame.link, '_blank');
+            }
+            // İndirme sayısını artır
+            supabase.from('games').update({ 
+                downloads: (currentGame.downloads || 0) + 1 
+            }).eq('id', currentGame.id);
+        }
+
+        function scrollToReviews() {
+            document.getElementById('reviewsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ===== BAŞLAT =====
+        loadGame();
+    </script>
+</body>
+</html>
