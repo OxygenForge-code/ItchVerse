@@ -1,213 +1,395 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Itchverse • Launching</title>
-
-<style>
-/* =========================
-   RESET
-========================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  width: 100%;
-  height: 100%;
-  background: #0a0a0f;
-  font-family: Inter, system-ui, sans-serif;
-  color: #fff;
-  overflow: hidden;
-}
-
-/* =========================
-   VARIABLES
-========================= */
-:root {
-  --primary: #ff3d81;
-  --secondary: #6b7cff;
-  --accent: #2cffc9;
-  --glass: rgba(255,255,255,0.06);
-  --border: rgba(255,255,255,0.08);
-}
-
-/* =========================
-   BACKGROUND EFFECT
-========================= */
-.bg {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 30%, #ff3d8122, transparent 40%),
-    radial-gradient(circle at 80% 20%, #6b7cff22, transparent 40%),
-    radial-gradient(circle at 50% 80%, #2cffc922, transparent 40%);
-  animation: bgMove 18s ease-in-out infinite;
-}
-
-@keyframes bgMove {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-  100% { transform: scale(1); }
-}
-
-/* =========================
-   MAIN CONTAINER
-========================= */
-.center {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: grid;
-  place-items: center;
-  z-index: 2;
-}
-
-/* =========================
-   PANEL
-========================= */
-.panel {
-  width: 420px;
-  padding: 40px;
-  border-radius: 20px;
-  background: var(--glass);
-  backdrop-filter: blur(24px);
-  border: 1px solid var(--border);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
-}
-
-/* =========================
-   LOGO
-========================= */
-.logo {
-  font-size: 34px;
-  font-weight: 800;
-  letter-spacing: -1px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 10px;
-}
-
-.tagline {
-  font-size: 13px;
-  opacity: 0.6;
-  margin-bottom: 30px;
-}
-
-/* =========================
-   PROGRESS BAR
-========================= */
-.bar {
-  width: 100%;
-  height: 8px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.fill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  transition: width 0.25s ease;
-}
-
-/* =========================
-   STATUS
-========================= */
-.status {
-  margin-top: 18px;
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  opacity: 0.85;
-}
-
-.module {
-  opacity: 0.6;
-}
-
-/* =========================
-   FOOTER
-========================= */
-.footer {
-  position: absolute;
-  bottom: 20px;
-  font-size: 11px;
-  opacity: 0.35;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ItchVerse - Oyun Platformu</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            background: #0f0f1a; 
+            color: #fff; 
+            min-height: 100vh;
+        }
+        .header { 
+            background: #1a1a2e; 
+            padding: 15px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            border-bottom: 2px solid #e94560;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo { font-size: 28px; font-weight: bold; color: #e94560; }
+        .logo span { color: #fff; }
+        .nav-btn { 
+            background: #e94560; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            cursor: pointer;
+            font-size: 14px; font-weight: bold;
+        }
+        .nav-btn:hover { background: #ff6b6b; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .hero { 
+            text-align: center; 
+            padding: 60px 20px; 
+            background: #16213e; 
+            border-radius: 15px; 
+            margin: 20px 0;
+        }
+        .hero h1 { font-size: 42px; margin-bottom: 10px; }
+        .hero p { color: #aaa; font-size: 18px; }
+        .search-box { 
+            max-width: 500px; 
+            margin: 30px auto; 
+            display: flex; 
+            gap: 10px;
+        }
+        .search-box input { 
+            flex: 1; 
+            padding: 12px 15px; 
+            border: none; 
+            border-radius: 8px; 
+            background: #0f0f1a; 
+            color: #fff; 
+            font-size: 16px;
+        }
+        .search-box button { 
+            background: #e94560; 
+            color: white; 
+            border: none; 
+            padding: 12px 25px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold;
+        }
+        .filter-bar { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 20px; 
+            flex-wrap: wrap;
+        }
+        .filter-btn { 
+            background: #16213e; 
+            color: #aaa; 
+            border: 1px solid #333; 
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            cursor: pointer;
+        }
+        .filter-btn.active { background: #e94560; color: white; border-color: #e94560; }
+        .games-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 20px;
+        }
+        .game-card { 
+            background: #16213e; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(233,69,96,0.3); }
+        .game-img { 
+            width: 100%; 
+            height: 160px; 
+            background: #0f0f1a; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 60px;
+        }
+        .game-info { padding: 15px; }
+        .game-title { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+        .game-dev { color: #e94560; font-size: 13px; margin-bottom: 10px; }
+        .game-desc { color: #aaa; font-size: 14px; line-height: 1.4; margin-bottom: 10px; }
+        .game-meta { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            font-size: 13px; 
+            color: #888;
+        }
+        .rating { color: #ffd700; }
+        .tag { 
+            background: #0f3460; 
+            color: #4fbdba; 
+            padding: 3px 10px; 
+            border-radius: 10px; 
+            font-size: 11px;
+        }
+        .loading { text-align: center; padding: 60px; color: #e94560; font-size: 20px; }
+        .empty { text-align: center; padding: 60px; color: #888; }
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.8); 
+            z-index: 200;
+            align-items: center; 
+            justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content { 
+            background: #16213e; 
+            padding: 30px; 
+            border-radius: 15px; 
+            width: 90%; 
+            max-width: 500px;
+            max-height: 90vh; 
+            overflow-y: auto;
+        }
+        .modal-content h2 { margin-bottom: 20px; color: #e94560; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #aaa; font-size: 14px; }
+        .form-group input, .form-group textarea, .form-group select { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #333; 
+            border-radius: 8px; 
+            background: #0f0f1a; 
+            color: #fff; 
+            font-size: 14px;
+        }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .submit-btn { 
+            width: 100%; 
+            padding: 14px; 
+            background: #e94560; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer;
+        }
+        .submit-btn:hover { background: #ff6b6b; }
+        .close-btn { 
+            float: right; 
+            background: none; 
+            border: none; 
+            color: #fff; 
+            font-size: 24px; 
+            cursor: pointer;
+        }
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 28px; }
+            .games-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 <body>
-
-<div class="bg"></div>
-
-<div class="center">
-  <div class="panel">
-    <div class="logo">Itchverse</div>
-    <div class="tagline">Next-gen indie game platform</div>
-
-    <div class="bar">
-      <div class="fill" id="fill"></div>
+    <div class="header">
+        <div class="logo">Itch<span>Verse</span></div>
+        <button class="nav-btn" onclick="openModal()">🎮 Oyun Yükle</button>
     </div>
 
-    <div class="status">
-      <div class="module" id="module">Initializing engine</div>
-      <div id="percent">0%</div>
+    <div class="container">
+        <div class="hero">
+            <h1>🚀 ItchVerse</h1>
+            <p>Roblox tarzı oyun platformu! Oyunları keşfet, yükle, oyna!</p>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Oyun ara..." oninput="filterGames()">
+                <button onclick="filterGames()">🔍 Ara</button>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="setFilter('all')">Tümü</button>
+            <button class="filter-btn" onclick="setFilter('aksiyon')">Aksiyon</button>
+            <button class="filter-btn" onclick="setFilter('macera')">Macera</button>
+            <button class="filter-btn" onclick="setFilter('bulmaca')">Bulmaca</button>
+            <button class="filter-btn" onclick="setFilter('yarış')">Yarış</button>
+            <button class="filter-btn" onclick="setFilter('simülasyon')">Simülasyon</button>
+        </div>
+
+        <div id="gamesContainer">
+            <div class="loading">⏳ Oyunlar yükleniyor...</div>
+        </div>
     </div>
-  </div>
 
-  <div class="footer">© Itchverse Platform</div>
-</div>
+    <!-- Upload Modal -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">×</button>
+            <h2>🎮 Yeni Oyun Yükle</h2>
+            <form id="uploadForm" onsubmit="uploadGame(event)">
+                <div class="form-group">
+                    <label>Oyun Adı</label>
+                    <input type="text" id="gameName" required placeholder="Örn: Zümrüt Macerası">
+                </div>
+                <div class="form-group">
+                    <label>Geliştirici Adı</label>
+                    <input type="text" id="devName" required placeholder="Senin adın veya takım adın">
+                </div>
+                <div class="form-group">
+                    <label>Tür</label>
+                    <select id="gameGenre">
+                        <option value="aksiyon">Aksiyon</option>
+                        <option value="macera">Macera</option>
+                        <option value="bulmaca">Bulmaca</option>
+                        <option value="yarış">Yarış</option>
+                        <option value="simülasyon">Simülasyon</option>
+                        <option value="rpg">RPG</option>
+                        <option value="strateji">Strateji</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Açıklama</label>
+                    <textarea id="gameDesc" required placeholder="Oyunun hakkında kısa bir açıklama..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Oyun Linki (İsteğe Bağlı)</label>
+                    <input type="url" id="gameLink" placeholder="https://...">
+                </div>
+                <button type="submit" class="submit-btn">🚀 Oyunu Yayınla</button>
+            </form>
+        </div>
+    </div>
 
-<script>
-/* =========================
-   LOADING LOGIC
-========================= */
-const fill = document.getElementById("fill");
-const percent = document.getElementById("percent");
-const moduleText = document.getElementById("module");
+    <script>
+        // ===== SUPABASE AYARLARI =====
+        // Bunları kendi Supabase projenle değiştir!
+        const SUPABASE_URL = 'https://SENIN-PROJE-URL.supabase.co';
+        const SUPABASE_ANON_KEY = 'SENIN-ANON-KEY-BURAYA';
 
-const modules = [
-  "Initializing engine",
-  "Loading UI framework",
-  "Syncing user profile",
-  "Fetching games",
-  "Preparing sandbox",
-  "Finalizing launch"
-];
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let progress = 0;
-let moduleIndex = 0;
+        let allGames = [];
+        let currentFilter = 'all';
 
-const timer = setInterval(() => {
-  progress += Math.random() * 6 + 2;
-  if (progress >= 100) {
-    progress = 100;
-    clearInterval(timer);
+        // ===== OYUNLARI YÜKLE =====
+        async function loadGames() {
+            const container = document.getElementById('gamesContainer');
+            container.innerHTML = '<div class="loading">⏳ Oyunlar yükleniyor...</div>';
 
-    moduleText.textContent = "Launching Itchverse…";
+            const { data, error } = await supabase
+                .from('games')
+                .select('*')
+                .order('created_at', { ascending: false });
 
-    setTimeout(() => {
-      window.location.href = "main.html";
-    }, 900);
-  }
+            if (error) {
+                container.innerHTML = `<div class="empty">❌ Hata: ${error.message}<br><br>
+                    <small>Supabase bağlantı ayarlarını kontrol et!</small></div>`;
+                return;
+            }
 
-  fill.style.width = progress + "%";
-  percent.textContent = Math.floor(progress) + "%";
+            allGames = data || [];
+            renderGames();
+        }
 
-  if (progress > moduleIndex * (100 / modules.length)) {
-    moduleText.textContent = modules[moduleIndex] || modules.at(-1);
-    moduleIndex++;
-  }
+        // ===== OYUNLARI GÖSTER =====
+        function renderGames() {
+            const container = document.getElementById('gamesContainer');
+            const search = document.getElementById('searchInput').value.toLowerCase();
 
-}, 140);
-</script>
+            let filtered = allGames.filter(g => {
+                const matchesSearch = g.name.toLowerCase().includes(search) || 
+                                    g.description.toLowerCase().includes(search) ||
+                                    g.developer.toLowerCase().includes(search);
+                const matchesFilter = currentFilter === 'all' || g.genre === currentFilter;
+                return matchesSearch && matchesFilter;
+            });
 
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty">😕 Oyun bulunamadı.<br>İlk oyunu sen yükle!</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(game => `
+                <div class="game-card" onclick="openGame('${game.id}')">
+                    <div class="game-img">🎮</div>
+                    <div class="game-info">
+                        <div class="game-title">${escapeHtml(game.name)}</div>
+                        <div class="game-dev">👤 ${escapeHtml(game.developer)}</div>
+                        <div class="game-desc">${escapeHtml(game.description.substring(0, 80))}...</div>
+                        <div class="game-meta">
+                            <span class="rating">⭐ ${game.rating || 0}</span>
+                            <span class="tag">${game.genre.toUpperCase()}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== FİLTRE =====
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderGames();
+        }
+
+        function filterGames() {
+            renderGames();
+        }
+
+        // ===== OYUN YÜKLE =====
+        async function uploadGame(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('.submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Yükleniyor...';
+            btn.disabled = true;
+
+            const gameData = {
+                name: document.getElementById('gameName').value,
+                developer: document.getElementById('devName').value,
+                genre: document.getElementById('gameGenre').value,
+                description: document.getElementById('gameDesc').value,
+                link: document.getElementById('gameLink').value || null,
+                rating: 0,
+                downloads: 0
+            };
+
+            const { data, error } = await supabase
+                .from('games')
+                .insert([gameData])
+                .select();
+
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+
+            if (error) {
+                alert('❌ Hata: ' + error.message);
+                return;
+            }
+
+            alert('✅ Oyun başarıyla yüklendi!');
+            closeModal();
+            document.getElementById('uploadForm').reset();
+            loadGames();
+        }
+
+        // ===== OYUN DETAY SAYFASINA GİT =====
+        function openGame(id) {
+            window.location.href = `game.html?id=${id}`;
+        }
+
+        // ===== MODAL =====
+        function openModal() {
+            document.getElementById('uploadModal').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('uploadModal').classList.remove('active');
+        }
+
+        // ===== GÜVENLİK =====
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ===== BAŞLAT =====
+        loadGames();
+    </script>
 </body>
 </html>
